@@ -10,43 +10,43 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ApiMatchJsonRouteImport } from './routes/api/match.json'
+import { Route as ApiMatchDotjsonRouteImport } from './routes/api/match[.]json'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiMatchJsonRoute = ApiMatchJsonRouteImport.update({
-  id: '/api/match/json',
-  path: '/api/match/json',
+const ApiMatchDotjsonRoute = ApiMatchDotjsonRouteImport.update({
+  id: '/api/match.json',
+  path: '/api/match.json',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/api/match/json': typeof ApiMatchJsonRoute
+  '/api/match.json': typeof ApiMatchDotjsonRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/api/match/json': typeof ApiMatchJsonRoute
+  '/api/match.json': typeof ApiMatchDotjsonRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/api/match/json': typeof ApiMatchJsonRoute
+  '/api/match.json': typeof ApiMatchDotjsonRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/match/json'
+  fullPaths: '/' | '/api/match.json'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/match/json'
-  id: '__root__' | '/' | '/api/match/json'
+  to: '/' | '/api/match.json'
+  id: '__root__' | '/' | '/api/match.json'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ApiMatchJsonRoute: typeof ApiMatchJsonRoute
+  ApiMatchDotjsonRoute: typeof ApiMatchDotjsonRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -58,11 +58,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/match/json': {
-      id: '/api/match/json'
-      path: '/api/match/json'
-      fullPath: '/api/match/json'
-      preLoaderRoute: typeof ApiMatchJsonRouteImport
+    '/api/match.json': {
+      id: '/api/match.json'
+      path: '/api/match.json'
+      fullPath: '/api/match.json'
+      preLoaderRoute: typeof ApiMatchDotjsonRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -70,7 +70,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ApiMatchJsonRoute: ApiMatchJsonRoute,
+  ApiMatchDotjsonRoute: ApiMatchDotjsonRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { fetchSource, transform } from "@/lib/match-transform";
 
-export const Route = createFileRoute("/api/match/json")({
+export const Route = createFileRoute("/api/match.json")({
   server: {
     handlers: {
       GET: async ({ request }) => {
