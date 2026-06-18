@@ -459,6 +459,9 @@ export const ShakaPlayer = ({
       console.log(`✅ Shaka loaded: ${title || src}`);
     } catch (err: any) {
       if (currentInitId !== initIdRef.current) return;
+      // Shaka throws LOAD_INTERRUPTED (6001) / OPERATION_ABORTED (7000) when a
+      // newer load() or destroy() supersedes this one — not a real failure.
+      if (err?.code === 6001 || err?.code === 7000) return;
       console.error("Shaka init error:", err);
       setError(err?.message || "Failed to load stream");
       setIsLoading(false);
