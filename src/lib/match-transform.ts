@@ -136,10 +136,16 @@ export function findChannel(
   return null;
 }
 
-export const SOURCE_URL = "https://eplayhdapi1.vercel.app/api2/match.json";
+export const SOURCE_URL = "https://api6.photocard.fun/api1/match.json";
 
 export async function fetchSource(): Promise<SourceMatch[]> {
-  const res = await fetch(SOURCE_URL, { headers: { "user-agent": "Mozilla/5.0" } });
+  const res = await fetch(SOURCE_URL, {
+    headers: {
+      "user-agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36",
+      accept: "application/json,*/*",
+    },
+  });
   if (!res.ok) throw new Error(`Source fetch failed: ${res.status}`);
   return (await res.json()) as SourceMatch[];
 }
