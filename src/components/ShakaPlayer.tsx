@@ -294,6 +294,17 @@ export const ShakaPlayer = ({
           clearKeys = { [parsedDrm.keyId]: parsedDrm.key };
         } else if (parsedDrm.kid && parsedDrm.key) {
           clearKeys = { [parsedDrm.kid]: parsedDrm.key };
+        } else {
+          const entries = Object.entries(parsedDrm).filter(
+            ([keyId, key]) =>
+              typeof keyId === "string" &&
+              /^[0-9a-fA-F]{32}$/.test(keyId) &&
+              typeof key === "string" &&
+              /^[0-9a-fA-F]{32}$/.test(key),
+          );
+          if (entries.length > 0) {
+            clearKeys = Object.fromEntries(entries);
+          }
         }
       } else if (parsedDrm && typeof parsedDrm === "string") {
         if (
