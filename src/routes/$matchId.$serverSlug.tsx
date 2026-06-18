@@ -80,12 +80,18 @@ function PlayerPage() {
   const drm =
     data.kidHex && data.keyHex ? { [data.kidHex]: data.keyHex } : null;
 
+  // Detect manifest type from URL. Works for direct .m3u8/.mpd as well as
+  // proxy URLs that mention the format anywhere (path or query string).
+  // When nothing matches we leave it undefined so Shaka probes Content-Type.
   const lower = data.streamUrl.toLowerCase();
-  const type = lower.includes(".m3u8")
-    ? "hls"
-    : lower.includes(".mpd")
-      ? "dash"
-      : undefined;
+  const type =
+    lower.includes("m3u8") || lower.includes("/hls") || lower.includes("hls=")
+      ? "hls"
+      : lower.includes("mpd") ||
+          lower.includes("/dash") ||
+          lower.includes("dash=")
+        ? "dash"
+        : undefined;
 
   return (
     <div className="fixed inset-0 bg-black">
