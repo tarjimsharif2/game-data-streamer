@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiMatchDotjsonRouteImport } from './routes/api/match[.]json'
+import { Route as MatchIdServerSlugRouteImport } from './routes/$matchId.$serverSlug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,30 +23,39 @@ const ApiMatchDotjsonRoute = ApiMatchDotjsonRouteImport.update({
   path: '/api/match.json',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MatchIdServerSlugRoute = MatchIdServerSlugRouteImport.update({
+  id: '/$matchId/$serverSlug',
+  path: '/$matchId/$serverSlug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$matchId/$serverSlug': typeof MatchIdServerSlugRoute
   '/api/match.json': typeof ApiMatchDotjsonRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/$matchId/$serverSlug': typeof MatchIdServerSlugRoute
   '/api/match.json': typeof ApiMatchDotjsonRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/$matchId/$serverSlug': typeof MatchIdServerSlugRoute
   '/api/match.json': typeof ApiMatchDotjsonRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/match.json'
+  fullPaths: '/' | '/$matchId/$serverSlug' | '/api/match.json'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/match.json'
-  id: '__root__' | '/' | '/api/match.json'
+  to: '/' | '/$matchId/$serverSlug' | '/api/match.json'
+  id: '__root__' | '/' | '/$matchId/$serverSlug' | '/api/match.json'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  MatchIdServerSlugRoute: typeof MatchIdServerSlugRoute
   ApiMatchDotjsonRoute: typeof ApiMatchDotjsonRoute
 }
 
@@ -65,11 +75,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMatchDotjsonRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$matchId/$serverSlug': {
+      id: '/$matchId/$serverSlug'
+      path: '/$matchId/$serverSlug'
+      fullPath: '/$matchId/$serverSlug'
+      preLoaderRoute: typeof MatchIdServerSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  MatchIdServerSlugRoute: MatchIdServerSlugRoute,
   ApiMatchDotjsonRoute: ApiMatchDotjsonRoute,
 }
 export const routeTree = rootRouteImport
