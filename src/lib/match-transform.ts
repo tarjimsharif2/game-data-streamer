@@ -101,17 +101,19 @@ export function transform(source: SourceMatch[], origin: string): {
       const sname = serverName(ch.title);
       const sslug = slugify(ch.title);
       const sUnderscore = slugifyUnderscore(sname);
+      const playerUrl = `${origin}/${mslug}/${sslug}`;
       out.push({
         id,
         name: `${m.eventInfo.teamA} vs ${m.eventInfo.teamB} --- S${i + 1}`,
         league: "Live match",
         time,
         image,
-        matchUrl: `http://www.fawanews.sc/${mslug}.html`,
-        playerUrl: `${origin}/${mslug}/${sslug}`,
-        streamUrl: `https://kickbd.com/source/${sUnderscore}`,
+        matchUrl: playerUrl,
+        playerUrl,
+        streamUrl: playerUrl,
         serverName: sname,
       });
+      void sUnderscore;
     });
   }
   return {
