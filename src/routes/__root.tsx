@@ -77,14 +77,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "ePlayHD" },
+      { name: "description", content: "Match Data Hub provides structured JSON data for matches and their associated servers, with unique links for each." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "ePlayHD" },
+      { property: "og:description", content: "Match Data Hub provides structured JSON data for matches and their associated servers, with unique links for each." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "ePlayHD" },
+      { name: "twitter:description", content: "Match Data Hub provides structured JSON data for matches and their associated servers, with unique links for each." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a8ed46d9-241e-4234-aaca-5550153dd8c0/id-preview-e4456702--8aea838c-8a3f-41ed-b113-d1c3e78e5e21.lovable.app-1781752093978.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a8ed46d9-241e-4234-aaca-5550153dd8c0/id-preview-e4456702--8aea838c-8a3f-41ed-b113-d1c3e78e5e21.lovable.app-1781752093978.png" },
     ],
     links: [
       {
