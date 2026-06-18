@@ -81,6 +81,13 @@ function PlayerPage() {
   const drm =
     data.kidHex && data.keyHex ? { [data.kidHex]: data.keyHex } : null;
 
+  const lower = data.streamUrl.toLowerCase();
+  const type = lower.includes(".m3u8")
+    ? "hls"
+    : lower.includes(".mpd")
+      ? "dash"
+      : undefined;
+
   return (
     <div className="fixed inset-0 bg-black text-white flex flex-col">
       <div className="flex items-center gap-3 p-3 bg-black/80 z-10">
@@ -95,7 +102,7 @@ function PlayerPage() {
       <div className="flex-1 relative">
         <ShakaPlayer
           src={data.streamUrl}
-          type="dash"
+          type={type}
           title={`${data.title} — ${data.serverName}`}
           drm={drm}
         />
