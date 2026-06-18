@@ -333,6 +333,15 @@ export const ShakaPlayer = ({
         playerConfig.drm = {
           clearKeys: clearKeys,
           preferredKeySystems: ["org.w3.clearkey"],
+          // Force every advertised key system (Widevine / PlayReady) to
+          // resolve to ClearKey so the browser doesn't pick Widevine and
+          // then fail the license request (Shaka error 6012).
+          keySystemsMapping: {
+            "com.widevine.alpha": "org.w3.clearkey",
+            "com.microsoft.playready": "org.w3.clearkey",
+            "com.microsoft.playready.recommendation": "org.w3.clearkey",
+            "com.apple.fps": "org.w3.clearkey",
+          },
         };
       } else if (licenseServerUrl) {
         playerConfig.drm = {
