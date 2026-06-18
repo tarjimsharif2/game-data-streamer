@@ -77,10 +77,9 @@ function PlayerPage() {
     );
   }
 
+  // Shaka clearKeys takes a map of hex keyId -> hex key.
   const drm =
-    data.kidHex && data.keyHex
-      ? { [hexToB64Url(data.kidHex)]: hexToB64Url(data.keyHex) }
-      : null;
+    data.kidHex && data.keyHex ? { [data.kidHex]: data.keyHex } : null;
 
   return (
     <div className="fixed inset-0 bg-black text-white flex flex-col">
