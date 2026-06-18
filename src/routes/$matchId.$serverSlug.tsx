@@ -1,14 +1,19 @@
-import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { createFileRoute, useRouter, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useEffect, useRef } from "react";
+import { ArrowLeft } from "lucide-react";
+import { ShakaPlayer } from "@/components/ShakaPlayer";
 import { getStream } from "@/lib/match-lookup.functions";
 
 export const Route = createFileRoute("/$matchId/$serverSlug")({
   head: () => ({
     meta: [
       { title: "Live Player" },
-      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
+      {
+        name: "viewport",
+        content:
+          "width=device-width, initial-scale=1, viewport-fit=cover",
+      },
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
@@ -39,36 +44,6 @@ export const Route = createFileRoute("/$matchId/$serverSlug")({
   ),
 });
 
-function toBase64Url(hex: string): string {
-  // hex -> bytes -> base64url
-  const bytes = new Uint8Array(hex.length / 2);
-  for (let i = 0; i < bytes.length; i++) {
-    bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
-  }
-  let b = "";
-  for (let i = 0; i < bytes.length; i++) b += String.fromCharCode(bytes[i]);
-  return btoa(b).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
-}
-
-declare global {
-  interface Window {
-    shaka?: any;
-  }
-}
-
-function loadShaka(): Promise<any> {
-  if (typeof window === "undefined") return Promise.reject(new Error("no window"));
-  if (window.shaka) return Promise.resolve(window.shaka);
-  return new Promise((resolve, reject) => {
-    const s = document.createElement("script");
-    s.src = "https://cdn.jsdelivr.net/npm/shaka-player@4.11.2/dist/shaka-player.compiled.min.js";
-    s.async = true;
-    s.onload = () => (window.shaka ? resolve(window.shaka) : reject(new Error("shaka missing")));
-    s.onerror = () => reject(new Error("Failed to load shaka"));
-    document.head.appendChild(s);
-  });
-}
-
 function PlayerPage() {
   const { matchId, serverSlug } = Route.useParams();
   const getStreamFn = useServerFn(getStream);
@@ -76,41 +51,6 @@ function PlayerPage() {
     queryKey: ["stream", matchId, serverSlug],
     queryFn: () => getStreamFn({ data: { matchId, serverSlug } }),
   });
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    if (!data || !data.ok || !videoRef.current) return;
-    let player: any;
-    let cancelled = false;
-    (async () => {
-      try {
-        const shaka = await loadShaka();
-        if (cancelled) return;
-        shaka.polyfill.installAll();
-        if (!shaka.Player.isBrowserSupported()) {
-          console.error("Browser not supported");
-          return;
-        }
-        player = new shaka.Player(videoRef.current);
-        if (data.kidHex && data.keyHex) {
-          player.configure({
-            drm: {
-              clearKeys: {
-                [toBase64Url(data.kidHex)]: toBase64Url(data.keyHex),
-              },
-            },
-          });
-        }
-        await player.load(data.streamUrl);
-      } catch (e) {
-        console.error("Player error:", e);
-      }
-    })();
-    return () => {
-      cancelled = true;
-      if (player) player.destroy();
-    };
-  }, [data]);
 
   if (isLoading) {
     return (
@@ -127,20 +67,27 @@ function PlayerPage() {
     );
   }
 
+  const drm =
+    data.kidHex && data.keyHex ? { [data.kidHex]: data.keyHex } : null;
+
   return (
-    <div className="flex min-h-screen flex-col bg-black text-white">
-      <div className="flex-1 flex items-center justify-center">
-        <video
-          ref={videoRef}
-          controls
-          autoPlay
-          playsInline
-          className="w-full h-full max-h-screen"
-        />
+    <div className="fixed inset-0 bg-black text-white flex flex-col">
+      <div className="flex items-center gap-3 p-3 bg-black/80 z-10">
+        <Link to="/" className="flex items-center gap-1 text-sm opacity-80 hover:opacity-100">
+          <ArrowLeft className="w-4 h-4" /> Back
+        </Link>
+        <div className="text-sm">
+          <div className="font-semibold">{data.title}</div>
+          <div className="opacity-70 text-xs">{data.serverName}</div>
+        </div>
       </div>
-      <div className="p-3 text-center text-sm">
-        <div className="font-semibold">{data.title}</div>
-        <div className="opacity-70">{data.serverName}</div>
+      <div className="flex-1 relative">
+        <ShakaPlayer
+          src={data.streamUrl}
+          type="dash"
+          title={`${data.title} — ${data.serverName}`}
+          drm={drm}
+        />
       </div>
     </div>
   );
