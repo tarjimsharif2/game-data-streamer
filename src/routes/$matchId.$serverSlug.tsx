@@ -5,6 +5,16 @@ import { ArrowLeft } from "lucide-react";
 import { ShakaPlayer } from "@/components/ShakaPlayer";
 import { getStream } from "@/lib/match-lookup.functions";
 
+function hexToB64Url(hex: string): string {
+  const bytes = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < bytes.length; i++) {
+    bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
+  }
+  let s = "";
+  for (let i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i]);
+  return btoa(s).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+}
+
 export const Route = createFileRoute("/$matchId/$serverSlug")({
   head: () => ({
     meta: [
@@ -68,7 +78,9 @@ function PlayerPage() {
   }
 
   const drm =
-    data.kidHex && data.keyHex ? { [data.kidHex]: data.keyHex } : null;
+    data.kidHex && data.keyHex
+      ? { [hexToB64Url(data.kidHex)]: hexToB64Url(data.keyHex) }
+      : null;
 
   return (
     <div className="fixed inset-0 bg-black text-white flex flex-col">
