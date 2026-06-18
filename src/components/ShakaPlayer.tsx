@@ -346,14 +346,17 @@ export const ShakaPlayer = ({
       player.configure(playerConfig);
 
       player.addEventListener("error", (event: any) => {
+        // Ignore expected interruption codes (Strict-Mode double-mount, retries).
+        // 6001 LOAD_INTERRUPTED, 7000 OPERATION_ABORTED.
+        const code = event.detail?.code;
+        if (code === 6001 || code === 7000) return;
+        if (currentInitId !== initIdRef.current) return;
         console.error("Shaka Player Error:", event.detail);
 
         let errorMsg = "Stream playback error";
-        let logData = { code: event.detail?.code, url: "", status: "" };
+        let logData = { code, url: "", status: "" };
 
-        if (event.detail && event.detail.code) {
-          const code = event.detail.code;
-
+        if (event.detail && code) {
           if (code === 1001) {
             errorMsg =
               "Stream is currently offline or unreachable (Error 1001).";
