@@ -136,7 +136,18 @@ export function findChannel(
   return null;
 }
 
-export const SOURCE_URL = "https://api6.photocard.fun/api1/match.json";
+// ============================================================
+// 🔧 CHANGE THE JSON SOURCE HERE (single source of truth)
+// ------------------------------------------------------------
+// Option 1: edit this constant directly.
+// Option 2: set the env var SOURCE_URL on the server — it wins
+//           over this default, so you can swap without a code edit.
+// ============================================================
+const DEFAULT_SOURCE_URL = "https://api6.photocard.fun/api1/match.json";
+
+export const SOURCE_URL =
+  (typeof process !== "undefined" && process.env?.SOURCE_URL) ||
+  DEFAULT_SOURCE_URL;
 
 export async function fetchSource(): Promise<SourceMatch[]> {
   const res = await fetch(SOURCE_URL, {
