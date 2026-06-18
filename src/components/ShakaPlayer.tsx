@@ -5,7 +5,7 @@ import shakaControlsCssUrl from "shaka-player/dist/controls.css?url";
 
 declare global {
   interface Window {
-    shaka: any;
+    shaka?: any;
   }
 }
 
