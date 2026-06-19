@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 
 interface MatchItem {
@@ -62,13 +62,13 @@ function Index() {
               {servers.map((s) => {
                 const path = new URL(s.playerUrl).pathname;
                 return (
-                  <Link
+                  <a
                     key={s.id}
-                    to={path}
+                    href={path}
                     className="px-3 py-1 text-sm rounded bg-primary text-primary-foreground hover:opacity-90"
                   >
                     {s.serverName}
-                  </Link>
+                  </a>
                 );
               })}
             </div>
