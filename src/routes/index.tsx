@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
+import { getMatches } from "@/lib/matches.functions";
 
 interface MatchItem {
   id: string;
@@ -13,11 +14,7 @@ interface MatchItem {
 
 const matchesQuery = queryOptions({
   queryKey: ["matches"],
-  queryFn: async () => {
-    const res = await fetch("/api/match.json");
-    if (!res.ok) throw new Error("Failed to load matches");
-    return (await res.json()) as { count: number; matches: MatchItem[] };
-  },
+  queryFn: () => getMatches() as Promise<{ count: number; matches: MatchItem[] }>,
 });
 
 export const Route = createFileRoute("/")({
